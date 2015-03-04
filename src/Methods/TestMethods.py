@@ -144,7 +144,7 @@ def normalization(data):
 
 def testWithSVM(labels, vectors, testset, trainset, Kernel='linear', C=1.0, gamma=0.0, PCA_K=0):
     Label = array(toFloatList(labels))
-    OriginData = array(toFloatList(vectors)).reshape(4000,784)
+    OriginData = array(toFloatList(vectors)).reshape(4000, 784)
     TestNum = len(testset)
     test = array(toFloatList(testset)).reshape(TestNum/2,2) - 1
     TrainNum = len(trainset)
@@ -543,19 +543,19 @@ def getTrialAccuracyResult(labels, vectors, testset, trainset, TestK, TestC, Tes
         print "Test ", i
         print "--------------------------------------------------------------------------------------------------"
         print "K = ", TestK[i]
-        Rate, Correct, C_NUM = test_methods.testWithSVM(labels, vectors, testset, trainset, Kernel='linear', PCA_K=TestK[i])
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='linear', PCA_K=TestK[i])
         C_SVM_LINEAR.append(Correct)
         print "--------------------------------------------------------------------------------------------------"
-        Rate, Correct, C_NUM = test_methods.testWithSVM(labels, vectors, testset, trainset, Kernel='poly', PCA_K=TestK[i])
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='poly', PCA_K=TestK[i])
         C_SVM_POLY.append(Correct)
         print "--------------------------------------------------------------------------------------------------"
-        Rate, Correct, C_NUM = test_methods.testWithSVM(labels, vectors, testset, trainset, Kernel='rbf', C=TestC[i], gamma=TestGamma[i], PCA_K=TestK[i])
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='rbf', C=TestC[i], gamma=TestGamma[i], PCA_K=TestK[i])
         C_SVM_RBF.append(Correct)
         print "--------------------------------------------------------------------------------------------------"
-        Rate, Correct, C_NUM = test_methods.testWithLR(labels, vectors, testset, trainset, PCA_K=TestK[i])
+        Rate, Correct, C_NUM = testWithLR(labels, vectors, testset, trainset, PCA_K=TestK[i])
         C_LR.append(Correct)
         print "--------------------------------------------------------------------------------------------------"
-        Rate, Correct, C_NUM = test_methods.testWithKNN(labels, vectors, testset, trainset, PCA_K=TestK[i])
+        Rate, Correct, C_NUM = testWithKNN(labels, vectors, testset, trainset, PCA_K=TestK[i])
         C_1NN.append(Correct)
         print "--------------------------------------------------------------------------------------------------"
     AccuracyResult[0][0] = array(C_SVM_LINEAR)
@@ -568,3 +568,35 @@ def getTrialAccuracyResult(labels, vectors, testset, trainset, TestK, TestC, Tes
     #print "\n\n"
     return AccuracyResult
 
+def getTrialDigitResult(labels, vectors, testset, trainset, TestK, TestC, TestGamma):
+    N = len(TestK)
+    Num_linear = zeros((1, 10))
+    Num_poly = zeros((1, 10))
+    Num_rbf = zeros((1, 10))
+    Num_lr = zeros((1, 10))
+    Num_1nn = zeros((1, 10))
+    RecognitionNum = zeros((5,1,10))
+    for i in range(len(TestK)):
+        print "Test ", i
+        print "--------------------------------------------------------------------------------------------------"
+        print "K = ", TestK[i]
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='linear', PCA_K=TestK[i])
+        Num_linear += array(C_NUM)
+        print "--------------------------------------------------------------------------------------------------"
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='poly', PCA_K=TestK[i])
+        Num_poly += array(C_NUM)
+        print "--------------------------------------------------------------------------------------------------"
+        Rate, Correct, C_NUM = testWithSVM(labels, vectors, testset, trainset, Kernel='rbf', C=TestC[i], gamma=TestGamma[i], PCA_K=TestK[i])
+        Num_rbf += array(C_NUM)
+        print "--------------------------------------------------------------------------------------------------"
+        Rate, Correct, C_NUM = testWithLR(labels, vectors, testset, trainset, PCA_K=TestK[i])
+        Num_lr += array(C_NUM)
+        print "--------------------------------------------------------------------------------------------------"
+        Rate, Correct, C_NUM = testWithKNN(labels, vectors, testset, trainset, PCA_K=TestK[i])
+        Num_1nn += array(C_NUM)
+    RecognitionNum[0][0] = array(Num_linear)
+    RecognitionNum[1][0] = array(Num_poly)
+    RecognitionNum[2][0] = array(Num_rbf)
+    RecognitionNum[3][0] = array(Num_lr)
+    RecognitionNum[4][0] = array(Num_1nn)
+    return RecognitionNum/N

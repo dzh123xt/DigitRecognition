@@ -1,6 +1,7 @@
 __author__ = 'dengzhihong'
 
 from src.Methods.TestMethods import *
+from src.Methods.ChallengeTest import *
 
 if __name__ == '__main__':
     print "Read Data From txt"
@@ -9,6 +10,9 @@ if __name__ == '__main__':
     testset = str(open('../Data/digits4000_testset.txt', 'r').read()).split()
     trainset = str(open('../Data/digits4000_trainset.txt', 'r').read()).split()
 
+    challenge_vectors = str(open('../Data/cdigits_cdigits_vec.txt', 'r').read()).split()
+    challenge_labels = str(open('../Data/cdigits_cdigits_labels.txt', 'r').read()).split()
+
     #outputDataForCrossValidation(labels, vectors, testset, trainset, PCA_K=200)
 
     #accuracyAndDimension(labels, vectors, testset, trainset)
@@ -16,7 +20,7 @@ if __name__ == '__main__':
     #recognitionNumberAndDigit(labels, vectors, testset, trainset)
 
     #testWithSVM(labels, vectors, testset, trainset, Kernel='rbf', C=8, gamma=0.0078125, PCA_K=50)
-
+    # Parameter from the cross-validation
     TestK = [20, 50, 84, 150, 300, 400]
     TestC = [2, 8, 2, 2, 2, 2]
     TestGamma = [0.0078125, 0.0078125, 0.0078125, 0.0078125, 0.0078125, 0.0078125]
